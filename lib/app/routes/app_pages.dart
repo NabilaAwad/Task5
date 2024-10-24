@@ -14,7 +14,7 @@ class AppPages {
   static final routes = [
     GetPage(
       name: _Paths.HOME,
-      page: () =>  Mainscreen(),
+      page: () =>  OnBoardingScreens(),
       binding: HomeBinding(),
     ),
   ];
