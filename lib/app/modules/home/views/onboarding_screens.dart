@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:task5/app/modules/home/views/responsiveWidgets.dart';
 
+import 'login.dart';
 import 'mainScreen.dart';
 
 class OnBoardingScreens extends StatefulWidget {
@@ -61,7 +62,7 @@ class _OnBoardingScreensState extends State<OnBoardingScreens> {
             child: FloatingActionButton(
               onPressed: () {
                 if (currentPage == 2) {
-                 Get.to(()=>Mainscreen());
+                 Get.to(()=>Login());
                 } else {
                   pageController.nextPage(
                     duration: Duration(milliseconds: 300),
