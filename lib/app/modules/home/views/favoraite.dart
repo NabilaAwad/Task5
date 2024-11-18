@@ -5,23 +5,23 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../controllers/mainScreenController.dart';
 
-class MyCart extends StatelessWidget {
-  final MainScreenController controller = Get.find();
+class MyFavoraite extends StatelessWidget {
+  final MainScreenController controller = Get.put(MainScreenController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Cart"),
+        title: Text("My Favoraite"),
       ),
       body: Obx(() {
-        if (controller.myCart.isEmpty) {
-          return Center(child: Text("Your cart is empty."));
+        if (controller.favorite.isEmpty) {
+          return Center(child: Text("No favorite is found."));
         }
         return ListView.builder(
-          itemCount: controller.myCart.length,
+          itemCount: controller.favorite.length,
           itemBuilder: (context, index) {
-            final product = controller.myCart[index];
+            final product = controller.favorite[index];
             return ListTile(
               leading: Image.asset(product.imageUrl, width: 50),
               title: Text(product.name),
@@ -29,7 +29,7 @@ class MyCart extends StatelessWidget {
               trailing: IconButton(
                 icon: Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
-                  controller.deleteFavorite(product);
+                 controller.deleteFavorite(product);
                 },
               ),
             );

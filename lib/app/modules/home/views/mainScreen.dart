@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:task5/app/modules/home/controllers/mainScreenController.dart';
 import 'package:task5/app/modules/home/views/Cart.dart';
 import 'package:task5/app/modules/home/views/product_detailes.dart';
-import 'package:task5/app/modules/home/views/profile.dart';
+import 'package:task5/app/modules/home/views/favoraite.dart';
 import 'package:task5/app/modules/home/views/responsiveWidgets.dart';
 import 'package:task5/app/modules/home/views/settings.dart';
 
@@ -26,7 +27,7 @@ class _MainscreenState extends State<Mainscreen> {
     MainscreenBody(),
     Settings(),
     MyCart(),
-    Profile(),
+    MyFavoraite(),
   ];
 
   @override
@@ -75,17 +76,17 @@ class _MainscreenState extends State<Mainscreen> {
               onTap: () {
                 setState(() {
                   _currentIndex = 0;
-                  Navigator.pop(context); // Close drawer
+                  Navigator.pop(context);
                 });
               },
             ),
             ListTile(
               leading: Icon(Icons.person),
-              title: Text('Profile'),
+              title: Text('Favoraite'),
               onTap: () {
                 setState(() {
                   _currentIndex = 3;
-                  Navigator.pop(context); // Close drawer
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -95,7 +96,7 @@ class _MainscreenState extends State<Mainscreen> {
               onTap: () {
                 setState(() {
                   _currentIndex = 2;
-                  Navigator.pop(context); // Close drawer
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -105,7 +106,7 @@ class _MainscreenState extends State<Mainscreen> {
               onTap: () {
                 setState(() {
                   _currentIndex = 1;
-                  Navigator.pop(context); // Close drawer
+                  Navigator.pop(context);
                 });
               },
             ),
@@ -120,9 +121,9 @@ class _MainscreenState extends State<Mainscreen> {
         height: 60,
         items: <Widget>[
           Icon(Icons.home, size: 30, color: Colors.white),
-          Icon(Icons.search, size: 30, color: Colors.white),
+          Icon(Icons.settings, size: 30, color: Colors.white),
           Icon(Icons.shopping_cart, size: 30, color: Colors.white),
-          Icon(Icons.person, size: 30, color: Colors.white),
+          Icon(Icons.favorite, size: 30, color: Colors.white),
         ],
         index: _currentIndex,
         onTap: (index) {
@@ -137,13 +138,8 @@ class _MainscreenState extends State<Mainscreen> {
 
 
 class MainscreenBody extends StatelessWidget {
-  final List<Product> products = [
-    Product('Wireless Charger', 'Fast wireless charger compatible with iPhone and Android devices.', 19.99, 'images/th.jpg'),
-    Product('Wireless Headphones', 'High-quality wireless Bluetooth headphones with noise-cancelling feature.', 99.99, 'images/R (1).jpg'),
-    Product('Smart Watch', 'Fitness tracking smartwatch with heart rate monitor and GPS.', 149.99, 'images/9.jpg'),
-    Product('Laptop Stand', 'Adjustable ergonomic laptop stand made of aluminum alloy.', 29.99, 'images/10.jpg'),
-  ];
 
+  MainScreenController controller=Get.put(MainScreenController());
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -155,11 +151,11 @@ class MainscreenBody extends StatelessWidget {
           mainAxisSpacing: 10,
           childAspectRatio: 0.65,
         ),
-        itemCount: products.length,
+        itemCount: controller.products.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Get.to(() => ProductDetailScreen(product: products[index]));
+              Get.to(() => ProductDetailScreen(product: controller.products[index]));
             },
             child: Card(
               shape: RoundedRectangleBorder(
@@ -175,7 +171,7 @@ class MainscreenBody extends StatelessWidget {
                       topRight: Radius.circular(15),
                     ),
                     child: Image.asset(
-                      products[index].imageUrl,
+                      controller.products[index].imageUrl,
                       height: 150,
                       fit: BoxFit.cover,
                     ),
@@ -186,7 +182,7 @@ class MainscreenBody extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          products[index].name,
+                          controller.products[index].name,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -194,14 +190,14 @@ class MainscreenBody extends StatelessWidget {
                         ),
                         SizedBox(height: 5),
                         Text(
-                          products[index].description,
+                         controller.products[index].description,
                           style: TextStyle(color: Colors.grey, fontSize: 12),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 5),
                         Text(
-                          '\$${products[index].price.toStringAsFixed(2)}',
+                          '\$${controller.products[index].price.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.blueAccent,
@@ -209,13 +205,33 @@ class MainscreenBody extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 5),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent),
-                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                          ),
-                          onPressed: () {},
-                          child: Text('Add to Cart'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: Obx(() => Icon(
+                                controller.favorite.contains(controller.products[index])
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: Colors.red,
+                              )),
+                              onPressed: () {
+                                controller.toggleFavorite(controller.products[index]);
+                              },
+                            ),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.blueAccent),
+                                foregroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.white),
+                              ),
+                              onPressed: () {
+                                controller.addToCart(controller.products[index]);
+                              },
+                              child: Text('Add to Cart'),
+                            ),
+                          ],
                         ),
                       ],
                     ),

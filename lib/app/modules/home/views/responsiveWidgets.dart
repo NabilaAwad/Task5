@@ -66,7 +66,28 @@ class Product {
   final String imageUrl;
 
   Product(this.name, this.description, this.price, this.imageUrl);
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+    };
+  }
+
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      json['name'],
+      json['description'],
+      json['price'],
+      json['imageUrl'],
+    );
+  }
 }
+
 class CartItem {
   final String name;
   final double price;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'mainScreen.dart';
 import 'signup.dart';
 
@@ -12,11 +13,13 @@ class _LoginState extends State<Login> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final box = GetStorage();
 
   bool _isPasswordObscured = true;
 
   @override
   Widget build(BuildContext context) {
+
 
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -121,6 +124,7 @@ class _LoginState extends State<Login> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
+                      box.write('isLoggedIn', true);
                       Get.to(() => Mainscreen());
                     }
                   },

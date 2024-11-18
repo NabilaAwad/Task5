@@ -15,6 +15,16 @@ class AppPages {
   static final routes = [
     GetPage(
       name: _Paths.HOME,
+      page: () =>  Mainscreen(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.login,
+      page: () =>  Login(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.onBoarding,
       page: () =>  OnBoardingScreens(),
       binding: HomeBinding(),
     ),

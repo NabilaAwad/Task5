@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:task5/app/modules/home/views/responsiveWidgets.dart';
 
+import '../controllers/home_controller.dart';
 import 'login.dart';
-import 'mainScreen.dart';
 
 class OnBoardingScreens extends StatefulWidget {
   @override
@@ -12,8 +12,15 @@ class OnBoardingScreens extends StatefulWidget {
 }
 
 class _OnBoardingScreensState extends State<OnBoardingScreens> {
-  PageController pageController = PageController();
-  int currentPage = 0;
+  late HomeController controller;
+  final box = GetStorage();
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = Get.put(HomeController());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +30,10 @@ class _OnBoardingScreensState extends State<OnBoardingScreens> {
       body: Stack(
         children: [
           PageView(
-            controller: pageController,
+            controller: controller.pageController,
             onPageChanged: (int page) {
               setState(() {
-                currentPage = page;
+                controller.currentPage = page;
               });
             },
             children: [
@@ -53,7 +60,7 @@ class _OnBoardingScreensState extends State<OnBoardingScreens> {
             right: 0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) => Animated_tran(index: index, currentPage: currentPage)),
+              children: List.generate(3, (index) => Animated_tran(index: index, currentPage: controller.currentPage)),
             ),
           ),
           Positioned(
@@ -61,10 +68,11 @@ class _OnBoardingScreensState extends State<OnBoardingScreens> {
             right: 20,
             child: FloatingActionButton(
               onPressed: () {
-                if (currentPage == 2) {
-                 Get.to(()=>Login());
+                if (controller.currentPage == 2) {
+                  box.write('onboardingCompleted', true);
+                  Get.off(() => Login());
                 } else {
-                  pageController.nextPage(
+                  controller.pageController.nextPage(
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeIn,
                   );
@@ -80,7 +88,7 @@ class _OnBoardingScreensState extends State<OnBoardingScreens> {
 
   @override
   void dispose() {
-    pageController.dispose();
+    controller.pageController.dispose();
     super.dispose();
   }
 }
